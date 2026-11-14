@@ -65,3 +65,32 @@ extractNumber('а я томат'); // NaN
 extractNumber(2023); // 2023
 extractNumber(-1); // 1
 extractNumber(1.5); // 15
+
+//переводит время вида '8:5' или '08:05' в минуты от начала суток
+const timeToMinutes = (time) => {
+  const parts = time.split(':');
+  const hours = Number(parts[0]);
+  const minutes = Number(parts[1]);
+
+  return hours * 60 + minutes;
+};
+
+// true, если встреча целиком укладывается в рабочий день
+const isMeetingInWorkday = (workStart, workEnd, meetingStart, duration) => {
+  const workStartMinutes = timeToMinutes(workStart);
+  const workEndMinutes = timeToMinutes(workEnd);
+  const meetingStartMinutes = timeToMinutes(meetingStart);
+  const meetingEndMinutes = meetingStartMinutes + duration;
+
+  if (meetingStartMinutes >= workStartMinutes && meetingEndMinutes <= workEndMinutes) {
+    return true;
+  }
+
+  return false;
+};
+
+isMeetingInWorkday('08:00', '17:30', '14:00', 90); // true
+isMeetingInWorkday('8:0', '10:0', '8:0', 120); // true
+isMeetingInWorkday('08:00', '14:30', '14:00', 90); // false
+isMeetingInWorkday('14:00', '17:30', '08:0', 90); // false
+isMeetingInWorkday('8:00', '17:30', '08:00', 900); // false
